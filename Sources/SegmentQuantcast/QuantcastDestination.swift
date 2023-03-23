@@ -38,6 +38,7 @@ public class QuantcastDestination: DestinationPlugin {
     public var analytics: Analytics? = nil
     
     private var quantcastSettings: QuantcastSettings?
+    private var quantcastInstance: QuantcastMeasurement!
         
     public init() { }
 
@@ -49,13 +50,18 @@ public class QuantcastDestination: DestinationPlugin {
         // Note: Since integrationSettings is generic, strongly type the variable.
         guard let tempSettings: QuantcastSettings = settings.integrationSettings(forPlugin: self) else { return }
         quantcastSettings = tempSettings
-        QuantcastSPM.QuantcastMeasurement.sharedInstance().setupMeasurementSession(withAPIKey: tempSettings.apiKey, userIdentifier: nil, labels: nil)
+        quantcastInstance = QuantcastSPM.QuantcastMeasurement.sharedInstance()
+        quantcastInstance.enableLogging = true
+        if !quantcastInstance.isMeasurementActive {
+            quantcastInstance.setupMeasurementSession(withAPIKey: tempSettings.apiKey, userIdentifier: nil, labels: nil)
+        }
+        
     }
     
     public func identify(event: IdentifyEvent) -> IdentifyEvent? {
         
         if let userID = event.userId {
-            QuantcastSPM.QuantcastMeasurement.sharedInstance().recordUserIdentifier(userID, withLabels: nil)
+            quantcastInstance.recordUserIdentifier(userID, withLabels: nil)
         }
         
         return event
@@ -63,7 +69,7 @@ public class QuantcastDestination: DestinationPlugin {
     
     public func track(event: TrackEvent) -> TrackEvent? {
                     
-        QuantcastSPM.QuantcastMeasurement.sharedInstance().logEvent(event.event, withLabels: nil)
+        quantcastInstance.logEvent(event.event, withLabels: nil)
         
         return event
     }
@@ -71,7 +77,9 @@ public class QuantcastDestination: DestinationPlugin {
     public func screen(event: ScreenEvent) -> ScreenEvent? {
         
         let screenEvent = "Viewed" + (event.name ?? "") + "Screen"
-        QuantcastSPM.QuantcastMeasurement.sharedInstance().logEvent(screenEvent, withLabels: nil)
+        
+        quantcastInstance.logEvent(screenEvent, withLabels: nil)
+        
         return event
     }
 }
