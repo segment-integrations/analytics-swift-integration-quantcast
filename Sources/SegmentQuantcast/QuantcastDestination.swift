@@ -4,7 +4,6 @@
 // This plugin is NOT SUPPORTED by Segment.  It is here merely as an example,
 // and for your convenience should you find it useful.
 //
-
 // MIT License
 //
 // Copyright (c) 2021 Segment
@@ -38,7 +37,7 @@ public class QuantcastDestination: DestinationPlugin {
     public var analytics: Analytics? = nil
     
     private var quantcastSettings: QuantcastSettings?
-    private var quantcastInstance: QuantcastMeasurement!
+    private var quantcastInstance: QuantcastMeasurement?
         
     public init() { }
 
@@ -51,9 +50,9 @@ public class QuantcastDestination: DestinationPlugin {
         guard let tempSettings: QuantcastSettings = settings.integrationSettings(forPlugin: self) else { return }
         quantcastSettings = tempSettings
         quantcastInstance = QuantcastSPM.QuantcastMeasurement.sharedInstance()
-        quantcastInstance.enableLogging = true
-        if !quantcastInstance.isMeasurementActive {
-            quantcastInstance.setupMeasurementSession(withAPIKey: tempSettings.apiKey, userIdentifier: nil, labels: nil)
+        quantcastInstance?.enableLogging = true
+        if quantcastInstance?.isMeasurementActive == false {
+            quantcastInstance?.setupMeasurementSession(withAPIKey: tempSettings.apiKey, userIdentifier: nil, labels: nil)
         }
         
     }
@@ -61,7 +60,7 @@ public class QuantcastDestination: DestinationPlugin {
     public func identify(event: IdentifyEvent) -> IdentifyEvent? {
         
         if let userID = event.userId {
-            quantcastInstance.recordUserIdentifier(userID, withLabels: nil)
+            quantcastInstance?.recordUserIdentifier(userID, withLabels: nil)
         }
         
         return event
@@ -69,7 +68,7 @@ public class QuantcastDestination: DestinationPlugin {
     
     public func track(event: TrackEvent) -> TrackEvent? {
                     
-        quantcastInstance.logEvent(event.event, withLabels: nil)
+        quantcastInstance?.logEvent(event.event, withLabels: nil)
         
         return event
     }
@@ -78,7 +77,7 @@ public class QuantcastDestination: DestinationPlugin {
         
         let screenEvent = "Viewed" + (event.name ?? "") + "Screen"
         
-        quantcastInstance.logEvent(screenEvent, withLabels: nil)
+        quantcastInstance?.logEvent(screenEvent, withLabels: nil)
         
         return event
     }
