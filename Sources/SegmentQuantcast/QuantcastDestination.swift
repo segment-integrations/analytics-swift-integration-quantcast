@@ -50,6 +50,7 @@ public class QuantcastDestination: DestinationPlugin {
         guard let tempSettings: QuantcastSettings = settings.integrationSettings(forPlugin: self) else { return }
         quantcastSettings = tempSettings
         quantcastInstance = QuantcastSPM.QuantcastMeasurement.sharedInstance()
+        quantcastInstance?.uploadEventCount = 2
         quantcastInstance?.enableLogging = true
         if quantcastInstance?.isMeasurementActive == false {
             quantcastInstance?.setupMeasurementSession(withAPIKey: tempSettings.apiKey, userIdentifier: nil, labels: nil)
