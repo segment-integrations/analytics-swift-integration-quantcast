@@ -30,6 +30,11 @@ import Foundation
 import Segment
 import QuantcastSPM
 
+@objc(SEGQuantcastDestination)
+public class ObjCSegmentQuantcast: NSObject, ObjCDestination, ObjCDestinationShim {
+    public func instance() -> DestinationPlugin { return QuantcastDestination() }
+}
+
 public class QuantcastDestination: DestinationPlugin {
     public let timeline = Timeline()
     public let type = PluginType.destination
