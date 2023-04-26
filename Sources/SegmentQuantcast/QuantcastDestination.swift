@@ -31,8 +31,8 @@ import Segment
 import QuantcastSPM
 
 @objc(SEGQuantcastDestination)
-public class ObjCSegmentQuantcast: NSObject, ObjCDestination, ObjCDestinationShim {
-    public func instance() -> DestinationPlugin { return QuantcastDestination() }
+public class ObjCSegmentQuantcast: NSObject, ObjCPlugin, ObjCPluginShim {
+    public func instance() -> EventPlugin { return QuantcastDestination() }
 }
 
 public class QuantcastDestination: DestinationPlugin {
