@@ -1,9 +1,4 @@
 //
-//  QuantcastDestination.swift
-//  QuantcastDestination
-// This plugin is NOT SUPPORTED by Segment.  It is here merely as an example,
-// and for your convenience should you find it useful.
-//
 // MIT License
 //
 // Copyright (c) 2021 Segment
